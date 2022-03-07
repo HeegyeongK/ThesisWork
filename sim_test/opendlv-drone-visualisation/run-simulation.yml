@@ -1,0 +1,16 @@
+version: '2'
+
+services:
+    opendlv-drone-visualisation:
+        image: opendlv-drone-visualisation
+        network_mode: "host"
+        environment:
+          - DISPLAY=${DISPLAY}
+        command: "/usr/bin/opendlv-drone-visualisation --cid=111 --freq=80 --numDrones=2 --startX=20.0 --startY=60.0 --longSpan=0.1 --latSpan=0.1 --width=800 --height=800 --verbose"
+
+    opendlv-data-simulation:
+        image: opendlv-data-simulation
+        network_mode: "host"
+        command: "/usr/bin/opendlv-data-simulation --cid=111 --freq=50 --numDrones=2 --startX=20.0 --startY=60.0 --verbose" 
+        
+# Set the same cid, startX, startY and numDrones for both applications
