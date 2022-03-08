@@ -57,7 +57,7 @@ int32_t main(int32_t argc, char **argv) {
 
     //Main loop
     float t = 0.0f;
-    float dt = 1.0f;
+    float dt = 0.5f;
     float tMax = 1000.0f;
     //float dv = 0.0001f;
     
@@ -76,26 +76,17 @@ int32_t main(int32_t argc, char **argv) {
       c = std::sqrt(std::pow(boatFrame.x(),2)+ std::pow(boatFrame.y(),2));
       costh = (boatFrame.x()/c);
       sinth = (boatFrame.y()/c);
-      
-      /*
 
-      droneFrames[0].x(START_X+2*t*dv*c*costh);
-      droneFrames[0].y(START_Y+2*t*dv);
-      droneFrames[1].x(START_X-2*t*dv);
-      droneFrames[1].y(START_Y-2*t*dv);
-      */
+      droneFrames[0].x( c * costh - 10 * sinth);
+      droneFrames[0].y( c * sinth + 10 * costh);
+      droneFrames[1].x( c * costh + 10 * sinth);
+      droneFrames[1].y( c * sinth - 10 * costh);
 
 
       /*
-      droneFrames[0].x((2+c)*costh - (-2)*sinth+START_X+t*dt*dv);
-      droneFrames[0].y((2+c)*sinth + (-2)*costh+START_Y+t*dt*dv);
-      droneFrames[1].x((2+c)*costh - (2)*sinth+START_X+t*dt*dv);
-      droneFrames[1].y((2+c)*sinth + (2)*costh+START_Y+t*dt*dv);
-      */
-
       droneFrames[0].x((boatFrame.x()+2+c)*costh - (boatFrame.y()-2)*sinth);
       droneFrames[0].y((boatFrame.x()+2+c)*sinth + (boatFrame.y()-2)*costh);
-      /*
+      
       droneFrames[1].x((boatFrame.x()+2+c)*costh - (boatFrame.y()+2)*sinth);
       droneFrames[1].y((boatFrame.x()+2+c)*sinth + (boatFrame.y()+2)*costh);
       */

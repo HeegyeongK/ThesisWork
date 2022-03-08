@@ -147,7 +147,7 @@ int32_t main(int32_t argc, char **argv) {
           for (uint32_t iDrone = 0; iDrone < NUM_DRONES; iDrone++) {
             pixelPos = getpixelPosition(droneFrames[iDrone].x(), droneFrames[iDrone].y(), START_X, START_Y, WIDTH, HEIGHT);
             std::cout<<"Drone Position on the map"<<pixelPos.x<<","<<pixelPos.y<<std::endl;
-            cv::circle(imgExplored, pixelPos, 10, cv::Scalar(100,100,100,1), -1); 
+            //cv::circle(imgExplored, pixelPos, 10, cv::Scalar(100,100,100,1), -1); 
             cv::circle(imgPositions, pixelPos, 3, cv::Scalar(255,255,255,1), -1);
             cv::putText(imgPositions, std::to_string(iDrone), cv::Point(pixelPos.x+3, pixelPos.y+3), cv::FONT_HERSHEY_DUPLEX, 0.7, cv::Scalar(0, 0, 255, 1), 2); //Display drone number
           }
