@@ -57,7 +57,7 @@ int32_t main(int32_t argc, char **argv) {
 
     //Main loop
     float t = 0.0f;
-    float dt = 0.5f;
+    float dt = 0.01f;
     float tMax = 1000.0f;
     //float dv = 0.0001f;
     
@@ -70,26 +70,26 @@ int32_t main(int32_t argc, char **argv) {
       t=t+dt;
       
       //update position
+
+      /*
+      //Diaganally up
       boatFrame.x(START_X+t);
       boatFrame.y(START_Y+t);
-      
+      */
+
+      //Spiral motion
+      boatFrame.x( std::sin(3.14 * 2 * t) *t * 10);
+      boatFrame.y( std::cos(3.14 *t * 2) *10 *t);
+
       c = std::sqrt(std::pow(boatFrame.x(),2)+ std::pow(boatFrame.y(),2));
       costh = (boatFrame.x()/c);
       sinth = (boatFrame.y()/c);
 
+      //Moving parallel with the boat
       droneFrames[0].x( c * costh - 30 * sinth);
       droneFrames[0].y( c * sinth + 30 * costh);
       droneFrames[1].x( c * costh + 30 * sinth);
       droneFrames[1].y( c * sinth - 30 * costh);
-
-
-      /*
-      droneFrames[0].x((boatFrame.x()+2+c)*costh - (boatFrame.y()-2)*sinth);
-      droneFrames[0].y((boatFrame.x()+2+c)*sinth + (boatFrame.y()-2)*costh);
-      
-      droneFrames[1].x((boatFrame.x()+2+c)*costh - (boatFrame.y()+2)*sinth);
-      droneFrames[1].y((boatFrame.x()+2+c)*sinth + (boatFrame.y()+2)*costh);
-      */
 
       //send boat data
       cluon::data::TimeStamp sampleTime;
