@@ -104,7 +104,7 @@ int32_t main(int32_t argc, char **argv) {
                }   
             } else {      
               uint32_t iDrone = senderStamp - 1; //-1 since first senderStamp is for the boat
-              droneFrames[iDrone] = frame;
+              droneFrames[iDrone] = frame; 
               if (VERBOSE) {
                 std::cout << "Received positions, drone " << iDrone << ": x = " << droneFrames[iDrone].x() << ", y = " << droneFrames[iDrone].y() << std::endl;
               } 
@@ -145,11 +145,11 @@ int32_t main(int32_t argc, char **argv) {
           
           //Draw drone positions and colorize explored area
           for (uint32_t iDrone = 0; iDrone < NUM_DRONES; iDrone++) {
-            pixelPos = getpixelPosition(droneFrames[iDrone].x(), droneFrames[iDrone].y(), START_X, START_Y, WIDTH, HEIGHT);
-            std::cout<<"Drone Position on the map"<<pixelPos.x<<","<<pixelPos.y<<std::endl;
-            //cv::circle(imgExplored, pixelPos, 10, cv::Scalar(100,100,100,1), -1); 
-            cv::circle(imgPositions, pixelPos, 3, cv::Scalar(255,255,255,1), -1);
-            cv::putText(imgPositions, std::to_string(iDrone), cv::Point(pixelPos.x+3, pixelPos.y+3), cv::FONT_HERSHEY_DUPLEX, 0.7, cv::Scalar(0, 0, 255, 1), 2); //Display drone number
+            cv::Point pixelPos_D = getpixelPosition(droneFrames[iDrone].x(), droneFrames[iDrone].y(), START_X, START_Y, WIDTH, HEIGHT);
+            std::cout<<"Drone Position on the map"<<pixelPos_D.x<<","<<pixelPos_D.y<<std::endl;
+            cv::circle(imgExplored, pixelPos_D, 10, cv::Scalar(100,100,100,1), -1); 
+            cv::circle(imgPositions, pixelPos_D, 3, cv::Scalar(255,255,255,1), -1);
+            cv::putText(imgPositions, std::to_string(iDrone), cv::Point(pixelPos_D.x+3, pixelPos_D.y+3), cv::FONT_HERSHEY_DUPLEX, 0.7, cv::Scalar(0, 0, 255, 1), 2); //Display drone number
           }
                   
           //Combine into single map and display on screen

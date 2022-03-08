@@ -77,10 +77,10 @@ int32_t main(int32_t argc, char **argv) {
       costh = (boatFrame.x()/c);
       sinth = (boatFrame.y()/c);
 
-      droneFrames[0].x( c * costh - 10 * sinth);
-      droneFrames[0].y( c * sinth + 10 * costh);
-      droneFrames[1].x( c * costh + 10 * sinth);
-      droneFrames[1].y( c * sinth - 10 * costh);
+      droneFrames[0].x( c * costh - 30 * sinth);
+      droneFrames[0].y( c * sinth + 30 * costh);
+      droneFrames[1].x( c * costh + 30 * sinth);
+      droneFrames[1].y( c * sinth - 30 * costh);
 
 
       /*
