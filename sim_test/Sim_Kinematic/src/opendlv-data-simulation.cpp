@@ -10,7 +10,7 @@ int32_t main(int32_t argc, char **argv) {
   if ( (0 == commandlineArguments.count("cid")) ||
        (0 == commandlineArguments.count("freq")) ||
        (0 == commandlineArguments.count("numDrones")) ||
-       (0 == commandlineArguments.count("startX")) ||
+       (0 == commandlineArguments.count("startX")) || 
        (0 == commandlineArguments.count("startY")) ) {
       std::cerr << argv[0] << "tests drone visualisation by sending dummy flight data" << std::endl;
       std::cerr << "         --cid:  CID of the OD4Session to send and receive messages" << std::endl;
@@ -40,6 +40,16 @@ int32_t main(int32_t argc, char **argv) {
     startFrame.pitch(0);
     startFrame.yaw(0);
 
+/*
+    opendlv::sim::Frame startFrame_Drone;
+    startFrame_Drone.x(START_X);
+    startFrame_Drone.y(START_Y);
+    startFrame_Drone.z(0);
+    startFrame_Drone.roll(0);
+    startFrame_Drone.pitch(0);
+    startFrame_Drone.yaw(0);
+*/
+
     //Initialize
     std::vector<opendlv::sim::Frame> droneFrames(NUM_DRONES, startFrame);
     opendlv::sim::Frame boatFrame(startFrame);
@@ -47,9 +57,9 @@ int32_t main(int32_t argc, char **argv) {
 
     //Main loop
     float t = 0.0f;
-    float dt = 0.2f;
+    float dt = 1.0f;
     float tMax = 1000.0f;
-    float dv = 0.0001f;
+    //float dv = 0.0001f;
     
     float c = 0.0f;
     float costh = 0.0f;
@@ -60,18 +70,20 @@ int32_t main(int32_t argc, char **argv) {
       t=t+dt;
       
       //update position
-      boatFrame.x(START_X+t*dv);
-      boatFrame.y(START_Y+t*dv);
+      boatFrame.x(START_X+t);
+      boatFrame.y(START_Y+t);
       
       c = std::sqrt(std::pow(boatFrame.x(),2)+ std::pow(boatFrame.y(),2));
       costh = (boatFrame.x()/c);
       sinth = (boatFrame.y()/c);
       
+      /*
 
       droneFrames[0].x(START_X+2*t*dv*c*costh);
       droneFrames[0].y(START_Y+2*t*dv);
       droneFrames[1].x(START_X-2*t*dv);
       droneFrames[1].y(START_Y-2*t*dv);
+      */
 
 
       /*
@@ -79,9 +91,11 @@ int32_t main(int32_t argc, char **argv) {
       droneFrames[0].y((2+c)*sinth + (-2)*costh+START_Y+t*dt*dv);
       droneFrames[1].x((2+c)*costh - (2)*sinth+START_X+t*dt*dv);
       droneFrames[1].y((2+c)*sinth + (2)*costh+START_Y+t*dt*dv);
+      */
 
       droneFrames[0].x((boatFrame.x()+2+c)*costh - (boatFrame.y()-2)*sinth);
       droneFrames[0].y((boatFrame.x()+2+c)*sinth + (boatFrame.y()-2)*costh);
+      /*
       droneFrames[1].x((boatFrame.x()+2+c)*costh - (boatFrame.y()+2)*sinth);
       droneFrames[1].y((boatFrame.x()+2+c)*sinth + (boatFrame.y()+2)*costh);
       */

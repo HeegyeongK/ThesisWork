@@ -15,6 +15,8 @@
 #include <cmath>
 
 //Rescales from longitude/latitude coordinates to pixel positions in image (using start location as middle of the map)
+
+/*
 cv::Point getpixelPosition(float xCoordinate, float yCoordinate, float startX, float startY, float latSpan, float longSpan, uint32_t width, uint32_t height) {
   float relPosX = 0.5f + (xCoordinate - startX) / latSpan; 
   float relPosY = 0.5f + (yCoordinate - startY) / longSpan;
@@ -22,7 +24,16 @@ cv::Point getpixelPosition(float xCoordinate, float yCoordinate, float startX, f
   uint32_t imgY = round(height - relPosY * height); //Redefined so positive y direction is up/north
   return cv::Point(imgX, imgY);
 }
+*/
 
+//Make it start from the center of the frame
+cv::Point getpixelPosition(float xCoordinate, float yCoordinate, float START_X, float START_Y, uint32_t width, uint32_t height){
+  float relPosX = (xCoordinate - START_X) + width / 2;
+  float relPosY = height - ((yCoordinate - START_Y) + height / 2);
+  uint32_t imgX = round (relPosX);
+  uint32_t imgY = round (relPosY);
+  return cv::Point(imgX, imgY);
+}
 int32_t main(int32_t argc, char **argv) {
     int32_t retCode{1};
     auto commandlineArguments = cluon::getCommandlineArguments(argc, argv);
@@ -88,7 +99,8 @@ int32_t main(int32_t argc, char **argv) {
             if (senderStamp == 0) {
               boatFrame = frame;
               if (VERBOSE) {
-                std::cout << "Received positions, boat: x = " << boatFrame.x() << ", y = " << boatFrame.y() << std::endl;
+                std::cout<< "Let's see how it works"<<std::endl;
+                //std::cout << "Received positions, boat: x = " << boatFrame.x() << ", y = " << boatFrame.y() << std::endl;
                }   
             } else {      
               uint32_t iDrone = senderStamp - 1; //-1 since first senderStamp is for the boat
@@ -120,19 +132,21 @@ int32_t main(int32_t argc, char **argv) {
         cv::putText(imgGrid, seStr, cv::Point(WIDTH-290, HEIGHT-5), cv::FONT_HERSHEY_SIMPLEX, 0.4, cv::Scalar(0, 255, 0, 1), 1); 
         
         //Create blank canvas for plotting drone explored area
-        cv::Mat imgExplored(HEIGHT, WIDTH, CV_8UC4, cv::Scalar(0, 0, 0, 0)); 
+        cv::Mat imgExplored(HEIGHT, WIDTH, CV_8UC4, cv::Scalar(0, 0, 0, 0)); //cumulating the results
         
         //Main loop
         while (od4.isRunning()) {
-          cv::Mat imgPositions(HEIGHT, WIDTH, CV_8UC4, cv::Scalar(0, 0, 0, 0)); //Why is it inside the loop?
+          cv::Mat imgPositions(HEIGHT, WIDTH, CV_8UC4, cv::Scalar(0, 0, 0, 0)); //updating the results
           
           //Draw boat position
-          cv::Point pixelPos = getpixelPosition(boatFrame.x(), boatFrame.y(), START_X, START_Y, LATSPAN, LONGSPAN, WIDTH, HEIGHT);
+          cv::Point pixelPos = getpixelPosition(boatFrame.x(), boatFrame.y(), START_X, START_Y, WIDTH, HEIGHT);
+          std::cout<<"Boat poistion on the map"<<pixelPos.x<<","<<pixelPos.y<<std::endl;
           cv::circle(imgPositions, pixelPos, 8, cv::Scalar(255, 0, 0, 1), -1);  
           
           //Draw drone positions and colorize explored area
           for (uint32_t iDrone = 0; iDrone < NUM_DRONES; iDrone++) {
-            pixelPos = getpixelPosition(droneFrames[iDrone].x(), droneFrames[iDrone].y(), START_X, START_Y, LATSPAN, LONGSPAN, WIDTH, HEIGHT);
+            pixelPos = getpixelPosition(droneFrames[iDrone].x(), droneFrames[iDrone].y(), START_X, START_Y, WIDTH, HEIGHT);
+            std::cout<<"Drone Position on the map"<<pixelPos.x<<","<<pixelPos.y<<std::endl;
             cv::circle(imgExplored, pixelPos, 10, cv::Scalar(100,100,100,1), -1); 
             cv::circle(imgPositions, pixelPos, 3, cv::Scalar(255,255,255,1), -1);
             cv::putText(imgPositions, std::to_string(iDrone), cv::Point(pixelPos.x+3, pixelPos.y+3), cv::FONT_HERSHEY_DUPLEX, 0.7, cv::Scalar(0, 0, 255, 1), 2); //Display drone number
